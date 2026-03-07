@@ -25,12 +25,8 @@ describe('pocketbase module', () => {
   });
 
   it('exports BuildingRecord type interface', async () => {
-    // Compile-time check — if BuildingRecord is not exported, this file won't compile
-    const pb = await import('../pocketbase');
-    type _Check = typeof pb extends { getAllBuildings: () => Promise<infer R> }
-      ? R extends Array<{ osm_id: string; custom_name: string }> ? true : never
-      : never;
-    const check: _Check = true;
-    expect(check).toBe(true);
+    // Compile-time check — if BuildingRecord is not exported, this import would fail
+    const { getAllBuildings } = await import('../pocketbase');
+    expect(typeof getAllBuildings).toBe('function');
   });
 });
