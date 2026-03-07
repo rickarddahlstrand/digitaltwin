@@ -43,7 +43,7 @@ docker build -t digitaltwin:test .
 
 - Loaded via CDN `<script>` in index.html - accessed as `window.Cesium`
 - TypeScript types: `cesium` npm package as devDependency (types only) + `src/types/cesium.d.ts` for window global
-- Config token: `window.CESIUM_CONFIG.token` from `/config.js` (gitignored)
+- Cesium Ion token stored in PocketBase `settings` collection (key: `cesium_token`)
 - React.StrictMode disabled: CesiumJS incompatible with double-mount
 - Fixed clock time (2024-06-15T10:00:00Z) for consistent lighting
 - Home view: Hammarby Sjostad (18.094, 59.2929, alt 991m)

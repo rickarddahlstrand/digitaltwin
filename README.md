@@ -80,14 +80,16 @@ cd digitaltwin
 
 # Install frontend dependencies
 cd frontend && npm ci
-
-# Create Cesium config (required for 3D tiles to load)
-cat > public/config.js << 'EOF'
-window.CESIUM_CONFIG = {
-  token: 'YOUR_CESIUM_ION_TOKEN_HERE'
-};
-EOF
 ```
+
+### Configure Cesium Ion Token
+
+The Cesium Ion access token is stored in the PocketBase `settings` collection — no config files needed.
+
+1. Start PocketBase (see below)
+2. Open the admin dashboard at `http://localhost:8090/_/`
+3. Go to the **settings** collection
+4. Create a record with `key`: `cesium_token` and `value`: your Cesium Ion token
 
 ### Development (Vite dev server)
 
@@ -179,7 +181,7 @@ Saved buildings appear as labeled POI markers on the map and can be filtered by 
 - CesiumJS is loaded via CDN `<script>` tag in `index.html`, not as an npm package (avoids ~150 MB bundle + asset copy complexity)
 - TypeScript types come from the `cesium` npm package as a devDependency (types only)
 - `window.Cesium` global is declared in `src/types/cesium.d.ts`
-- The Cesium Ion access token is loaded from `/config.js` (gitignored) via `window.CESIUM_CONFIG`
+- The Cesium Ion access token is stored in PocketBase's `settings` collection and fetched at startup
 - `React.StrictMode` is disabled because CesiumJS viewers cannot be double-mounted
 - The scene clock is fixed to 2024-06-15T10:00:00Z for consistent midday lighting
 

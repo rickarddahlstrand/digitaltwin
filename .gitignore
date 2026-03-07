@@ -13,7 +13,6 @@ scripts/build/tmp/
 *.cfg.local
 api_keys.cfg
 .env
-frontend/public/config.js
 
 # Node
 node_modules/

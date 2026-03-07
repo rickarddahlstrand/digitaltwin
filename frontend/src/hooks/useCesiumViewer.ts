@@ -5,14 +5,14 @@ export function useCesiumViewer(
   containerRef: React.RefObject<HTMLDivElement | null>,
   setStatus: (status: string) => void,
 ) {
-  const { viewerRef, googleTilesetRef, osmTilesetRef, setIsReady } = useCesium();
+  const { viewerRef, googleTilesetRef, osmTilesetRef, setIsReady, cesiumToken } = useCesium();
   const initedRef = useRef(false);
 
   useEffect(() => {
-    if (initedRef.current || !containerRef.current) return;
+    if (initedRef.current || !containerRef.current || !cesiumToken) return;
     initedRef.current = true;
 
-    Cesium.Ion.defaultAccessToken = window.CESIUM_CONFIG.token;
+    Cesium.Ion.defaultAccessToken = cesiumToken;
 
     const viewer = new Cesium.Viewer(containerRef.current, {
       globe: false,
@@ -89,5 +89,5 @@ export function useCesiumViewer(
       osmTilesetRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [cesiumToken]);
 }

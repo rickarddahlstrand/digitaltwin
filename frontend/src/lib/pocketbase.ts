@@ -59,3 +59,22 @@ export async function deleteBuilding(osmId: string): Promise<void> {
     await pb.collection('buildings').delete(existing.id);
   }
 }
+
+export interface SettingsMap {
+  [key: string]: string;
+}
+
+export async function getSettings(): Promise<SettingsMap> {
+  try {
+    const result = await pb.collection('settings').getList(1, 50, {
+      requestKey: 'getSettings',
+    });
+    const map: SettingsMap = {};
+    for (const item of result.items) {
+      map[item['key'] as string] = item['value'] as string;
+    }
+    return map;
+  } catch {
+    return {};
+  }
+}
