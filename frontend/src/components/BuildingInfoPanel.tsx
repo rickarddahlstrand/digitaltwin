@@ -47,9 +47,10 @@ export default function BuildingInfoPanel({ info, onClose, onSaved }: BuildingIn
           animate={{ opacity: 1, x: 0 }}
           {...dropExit}
           transition={{ duration: 0.3, ease: 'easeOut' }}
-          className="absolute top-28 right-4 z-10 w-[320px] max-h-[calc(100vh-32px)]
+          className="absolute inset-x-2 top-2 z-10 sm:inset-x-auto sm:top-28 sm:right-4 sm:w-[320px]
+            max-h-[calc(100vh-16px)] sm:max-h-[calc(100vh-32px)]
             overflow-y-auto rounded-xl text-sm
-            bg-slate-900/85 backdrop-blur-xl
+            bg-slate-900/95 sm:bg-slate-900/85 backdrop-blur-xl
             border border-white/[0.08]
             text-white/90 shadow-xl shadow-black/30"
         >

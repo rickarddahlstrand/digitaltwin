@@ -16,7 +16,7 @@ export default function App() {
 
   return (
     <CesiumProvider>
-      <div className="relative w-full h-screen overflow-hidden">
+      <div className="relative w-full h-[100dvh] overflow-hidden">
         <CesiumViewer setStatus={setStatus} />
         <StatusToast message={status} />
         <OverlayWrapper />
@@ -37,10 +37,11 @@ function OverlayWrapper() {
       <img
         src="/images/electricity_färg_grön_grå.png"
         alt="Electricity"
-        className="absolute bottom-4 right-4 z-10 h-12 drop-shadow-lg pointer-events-none"
+        className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 z-10 h-8 sm:h-12 drop-shadow-lg pointer-events-none"
       />
       {isReady && (
-        <div className="absolute bottom-4 left-4 z-10 flex flex-col gap-2">
+        <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 z-10 flex flex-col gap-1.5 sm:gap-2
+          max-w-[calc(100vw-5rem)] sm:max-w-none">
           <BuildingSearch />
           <MapControls cameraDataRef={cameraDataRef} />
           <LayerPanel poiControls={poiControls} energyControls={energyControls} />

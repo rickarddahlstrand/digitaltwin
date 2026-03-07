@@ -6,7 +6,7 @@ import { useCesium } from '../context/CesiumContext';
 import type { CameraData } from '../hooks/useCameraHud';
 
 const btnClass =
-  'w-7 h-7 flex items-center justify-center rounded-md text-white/50 hover:text-white hover:bg-white/10 transition-colors';
+  'w-8 h-8 sm:w-7 sm:h-7 flex items-center justify-center rounded-md text-white/50 hover:text-white active:bg-white/15 hover:bg-white/10 transition-colors';
 
 interface MapControlsProps {
   cameraDataRef: React.MutableRefObject<CameraData>;
@@ -256,7 +256,7 @@ export default function MapControls({ cameraDataRef }: MapControlsProps) {
         </div>
       </motion.div>
 
-      <div className="px-1.5 py-1 rounded-lg bg-black/50 backdrop-blur-md
+      <div className="hidden sm:block px-1.5 py-1 rounded-lg bg-black/50 backdrop-blur-md
         border border-white/[0.06] text-[8px] leading-relaxed text-white/30">
         <span className="text-white/45 font-medium">Vänster + dra</span> Rotera
         {' · '}

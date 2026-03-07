@@ -17,7 +17,7 @@ export default function StatusToast({ message, duration = 3000 }: StatusToastPro
   }, [message, duration]);
 
   return (
-    <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 pointer-events-none">
+    <div className="absolute top-2 sm:top-4 left-1/2 -translate-x-1/2 z-20 pointer-events-none max-w-[90vw]">
       <AnimatePresence>
         {visible && (
           <motion.div

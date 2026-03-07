@@ -115,7 +115,7 @@ export default function BuildingSearch() {
       {open && (
         <div className="absolute bottom-full left-0 right-0 mb-1 rounded-lg overflow-hidden
           bg-black/80 backdrop-blur-xl border border-white/[0.08]
-          shadow-xl shadow-black/40 z-20">
+          shadow-xl shadow-black/40 z-20 max-h-[40vh] overflow-y-auto">
           {results.map((b, i) => (
             <button
               key={b.id}
