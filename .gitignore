@@ -18,6 +18,7 @@ frontend/public/config.js
 # Frontend
 frontend/node_modules/
 frontend/dist/
+*.tsbuildinfo
 
 # PocketBase
 pb/
