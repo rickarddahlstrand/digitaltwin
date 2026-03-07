@@ -1,0 +1,33 @@
+name: digitaltwin-beta
+services:
+  app:
+    image: ghcr.io/rickarddahlstrand/digitaltwin:latest
+    restart: unless-stopped
+    volumes:
+      - ./pb_runtime_beta/pb_data:/pb_data
+    networks:
+      net:
+        ipv4_address: 10.10.25.3
+    depends_on:
+      - tunnel
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  tunnel:
+    image: cloudflare/cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN_BETA}
+    networks:
+      net:
+        ipv4_address: 10.10.25.2
+
+networks:
+  net:
+    ipam:
+      config:
+        - subnet: 10.10.25.0/24
