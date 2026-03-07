@@ -1,0 +1,82 @@
+@import 'tailwindcss';
+
+/* Full-screen base */
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ──────────────────────────────────────────────
+   Cesium widget overrides
+   ────────────────────────────────────────────── */
+.cesium-viewer-toolbar,
+.cesium-viewer-animationContainer,
+.cesium-viewer-timelineContainer,
+.cesium-viewer-bottom,
+.cesium-viewer-infoBoxContainer,
+.cesium-viewer-selectionIndicatorContainer {
+  display: none !important;
+}
+
+/* ──────────────────────────────────────────────
+   Compass
+   ────────────────────────────────────────────── */
+.compass-ring {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  position: relative;
+}
+
+.compass-dir {
+  position: absolute;
+  font-size: 9px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1;
+}
+
+.compass-n {
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #e74c3c !important;
+}
+
+.compass-s {
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.compass-e {
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.compass-w {
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.compass-needle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 18px;
+  transform-origin: bottom center;
+  transform: translate(-50%, -100%);
+  background: linear-gradient(to top, rgba(255,255,255,0.3) 0%, #e74c3c 100%);
+  border-radius: 1px;
+}

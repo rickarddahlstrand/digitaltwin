@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://b1hqk8v5a6yxe"]
+
+[ext_resource type="Script" path="res://scripts/digital_twin/twin_manager.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/ui/hud.gd" id="2"]
+[ext_resource type="Script" path="res://addons/cesium_godot/scripts/camera_controllers/CesiumDynamicCamera.gd" id="3"]
+
+[node name="Main" type="Node3D"]
+
+[node name="CesiumGeoreference" type="CesiumGeoreference" parent="." groups=["cesium_georeference"]]
+latitude = 59.302
+longitude = 18.088
+altitude = 500.0
+
+[node name="Cesium3DTileset" type="Cesium3DTileset" parent="CesiumGeoreference" groups=["cesium_tileset"]]
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866, -0.433, 0.25, 0.0, 0.5, 0.866, -0.5, -0.75, 0.433, 0, 200, 0)
+light_energy = 1.2
+shadow_enabled = true
+
+[node name="TwinManager" type="Node" parent="." groups=["twin_manager"]]
+script = ExtResource("1")
+
+[node name="POIContainer" type="Node3D" parent="TwinManager" groups=["poi_container"]]
+
+[node name="DataLayerContainer" type="Node3D" parent="TwinManager"]
+
+[node name="DynamicCamera" type="Camera3D" parent="."]
+script = ExtResource("3")
+
+[node name="UI" type="CanvasLayer" parent="."]
+script = ExtResource("2")

@@ -1,0 +1,34 @@
+# Godot
+.godot/
+*.import
+
+# Cesium plugin binaries (built from source)
+addons/cesium_godot/lib/
+addons/cesium_godot/bin/
+
+# Build artifacts
+scripts/build/tmp/
+
+# API keys and secrets
+*.cfg.local
+api_keys.cfg
+.env
+web/js/config.js
+web/public/config.js
+web/node_modules/
+
+# PocketBase
+backend/pocketbase
+backend/pb_data/
+
+# Claude Code
+.claude/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+*.swp
+*.swo
