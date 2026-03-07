@@ -17,10 +17,7 @@ digitaltwin/
   pb_runtime/        # PocketBase runtime (hooks, migrations, data)
   pb_runtime_beta/   # Beta environment data
   pb/                # Local PocketBase binary (gitignored)
-  addons/            # Godot Cesium plugin
-  scenes/            # Godot scenes
-  scripts/           # Godot build scripts
-  project.godot      # Godot project file
+  oldgodot/          # Archived Godot project files
 ```
 
 ## Commands
@@ -60,5 +57,4 @@ docker build -t digitaltwin:test .
 
 ## Godot Notes
 
-- Godot files in root (addons/, scenes/, scripts/, project.godot) are separate from the web stack
-- Do not modify Godot files when working on frontend/backend
+- Legacy Godot files archived in `oldgodot/` — not part of the active web stack
