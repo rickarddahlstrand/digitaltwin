@@ -1,29 +1,28 @@
-# Godot
-.godot/
-*.import
+# Node
+node_modules/
+dist/
+*.tsbuildinfo
 
-# Cesium plugin binaries (built from source)
-addons/cesium_godot/lib/
-addons/cesium_godot/bin/
-
-# Build artifacts
-scripts/build/tmp/
+# Local PocketBase serving
+frontend/dist_pb/
 
 # API keys and secrets
 *.cfg.local
 api_keys.cfg
 .env
 
-# Node
-node_modules/
-dist/
-*.tsbuildinfo
-
 # PocketBase
 pb/
 pb_runtime/pocketbase
 pb_runtime/pb_data/
 pb_runtime_beta/pb_data/
+
+# Godot
+.godot/
+*.import
+
+# Build artifacts
+scripts/build/tmp/
 
 # Logs
 *.log
