@@ -185,10 +185,10 @@ export default function MapControls({ cameraDataRef }: MapControlsProps) {
     const viewer = viewerRef.current;
     if (!viewer) return;
     viewer.camera.flyTo({
-      destination: Cesium.Cartesian3.fromDegrees(18.094, 59.2929, 991),
+      destination: Cesium.Cartesian3.fromDegrees(18.1010, 59.2916, 1126),
       orientation: {
-        heading: Cesium.Math.toRadians(1),
-        pitch: Cesium.Math.toRadians(-39),
+        heading: Cesium.Math.toRadians(350),
+        pitch: Cesium.Math.toRadians(-35),
         roll: 0,
       },
       duration: 1.2,

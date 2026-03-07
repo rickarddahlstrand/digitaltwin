@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ExternalLink, Save, Loader2, Check } from 'lucide-react';
+import { X, ExternalLink, Save, Loader2, Check, Trash2 } from 'lucide-react';
 import { dropExit } from '../utils/animations';
 import { useBuildingData } from '../hooks/useBuildingData';
 import CategoryInput from './CategoryInput';
@@ -13,7 +13,7 @@ interface BuildingInfoPanelProps {
 }
 
 export default function BuildingInfoPanel({ info, onClose, onSaved }: BuildingInfoPanelProps) {
-  const { savedData, loading, saving, save, allCategories } = useBuildingData(info);
+  const { savedData, loading, saving, save, remove, allCategories } = useBuildingData(info);
   const [customName, setCustomName] = useState('');
   const [notes, setNotes] = useState('');
   const [categories, setCategories] = useState<string[]>([]);
@@ -106,25 +106,46 @@ export default function BuildingInfoPanel({ info, onClose, onSaved }: BuildingIn
               />
             </div>
 
-            {/* Save button */}
-            <button
-              onClick={handleSave}
-              disabled={saving || loading}
-              className="flex items-center justify-center gap-1.5 w-full py-2.5 rounded-lg
-                text-xs font-semibold transition-all
-                bg-blue-500/25 hover:bg-blue-500/35 text-blue-300
-                border border-blue-400/20
-                disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              {saving ? (
-                <Loader2 size={14} className="animate-spin" />
-              ) : justSaved ? (
-                <Check size={14} />
-              ) : (
-                <Save size={14} />
+            {/* Action buttons */}
+            <div className="flex gap-2">
+              <button
+                onClick={handleSave}
+                disabled={saving || loading}
+                className="flex items-center justify-center gap-1.5 flex-1 py-1.5 rounded-lg
+                  text-xs font-semibold transition-all
+                  bg-blue-500/25 hover:bg-blue-500/35 text-blue-300
+                  border border-blue-400/20
+                  disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                {saving ? (
+                  <Loader2 size={12} className="animate-spin" />
+                ) : justSaved ? (
+                  <Check size={12} />
+                ) : (
+                  <Save size={12} />
+                )}
+                {saving ? 'Sparar...' : justSaved ? 'Sparat' : 'Spara'}
+              </button>
+
+              {savedData && (
+                <button
+                  onClick={async () => {
+                    await remove();
+                    onSaved?.();
+                    onClose();
+                  }}
+                  disabled={saving || loading}
+                  className="flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg
+                    text-xs font-semibold transition-all
+                    bg-red-500/15 hover:bg-red-500/25 text-red-400
+                    border border-red-400/20
+                    disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  <Trash2 size={12} />
+                  Radera
+                </button>
               )}
-              {saving ? 'Sparar...' : justSaved ? 'Sparat' : 'Spara'}
-            </button>
+            </div>
 
             {/* Property rows */}
             <div className="pt-1.5 space-y-1">

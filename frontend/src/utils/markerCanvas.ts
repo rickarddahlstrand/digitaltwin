@@ -1,4 +1,8 @@
-export function createMarkerCanvas(label: string): HTMLCanvasElement | null {
+// Reuse a single off-screen canvas for text measurement
+const measureCanvas = document.createElement('canvas');
+const measureCtx = measureCanvas.getContext('2d')!;
+
+export function createMarkerCanvas(label: string): string | null {
   if (!label) return null;
 
   const dpr = 2;
@@ -6,9 +10,8 @@ export function createMarkerCanvas(label: string): HTMLCanvasElement | null {
   const px = 8 * dpr;
   const py = 4 * dpr;
 
-  const measure = document.createElement('canvas').getContext('2d')!;
-  measure.font = `600 ${fontSize}px system-ui, sans-serif`;
-  const tw = measure.measureText(label).width;
+  measureCtx.font = `600 ${fontSize}px system-ui, sans-serif`;
+  const tw = measureCtx.measureText(label).width;
 
   const w = tw + px * 2;
   const h = fontSize + py * 2;
@@ -17,7 +20,8 @@ export function createMarkerCanvas(label: string): HTMLCanvasElement | null {
   const canvas = document.createElement('canvas');
   canvas.width = w;
   canvas.height = h;
-  const ctx = canvas.getContext('2d')!;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return null;
 
   // Background pill
   ctx.fillStyle = 'rgba(0,0,0,0.55)';
@@ -39,5 +43,6 @@ export function createMarkerCanvas(label: string): HTMLCanvasElement | null {
   ctx.fillStyle = '#ffffff';
   ctx.fillText(label, w / 2, h / 2);
 
-  return canvas;
+  // Return data URL so the canvas can be GC'd safely
+  return canvas.toDataURL();
 }

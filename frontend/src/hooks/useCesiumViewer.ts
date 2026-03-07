@@ -44,11 +44,11 @@ export function useCesiumViewer(
       .then((tileset) => {
         googleTilesetRef.current = tileset;
         viewer.scene.primitives.add(tileset);
-        setStatus('Google Tiles: OK');
+        setStatus('Google 3D Tiles laddade');
       })
       .catch((error) => {
         console.error('Failed to load Google 3D Tiles:', error);
-        setStatus('Google Tiles: Error');
+        setStatus('Fel vid laddning av Google 3D Tiles');
       });
 
     const osmReady = Cesium.Cesium3DTileset.fromIonAssetId(96188)
@@ -65,16 +65,16 @@ export function useCesiumViewer(
       });
 
     Promise.all([googleReady, osmReady]).then(() => {
-      setStatus('Tiles: Ready');
+      setStatus('Kartan är redo');
       setIsReady(true);
     });
 
     // Set camera to Hammarby Sjostad overview
     viewer.camera.setView({
-      destination: Cesium.Cartesian3.fromDegrees(18.094, 59.2929, 991),
+      destination: Cesium.Cartesian3.fromDegrees(18.1010, 59.2916, 1126),
       orientation: {
-        heading: Cesium.Math.toRadians(1),
-        pitch: Cesium.Math.toRadians(-39),
+        heading: Cesium.Math.toRadians(350),
+        pitch: Cesium.Math.toRadians(-35),
         roll: 0,
       },
     });

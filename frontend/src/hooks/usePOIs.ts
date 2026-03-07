@@ -12,7 +12,7 @@ interface MarkerEntry {
 export function usePOIs() {
   const { viewerRef, isReady } = useCesium();
   const entitiesRef = useRef<MarkerEntry[]>([]);
-  const activeCatsRef = useRef(new Set<string>());
+  const activeCatsRef = useRef(new Set<string>(['Energigemenskapen']));
   const [categories, setCategories] = useState<string[]>([]);
   const [, forceUpdate] = useState(0);
 
@@ -35,6 +35,7 @@ export function usePOIs() {
 
         const label = b.custom_name || `#${b.osm_id}`;
         const markerImage = createMarkerCanvas(label);
+        if (!markerImage) return;
         const cats = Array.isArray(b.categories) ? b.categories : [];
         cats.forEach((c) => catSet.add(c));
 
@@ -52,7 +53,7 @@ export function usePOIs() {
           name: label,
           position,
           billboard: {
-            image: markerImage as unknown as string,
+            image: markerImage,
             verticalOrigin: Cesium.VerticalOrigin.CENTER,
             heightReference: Cesium.HeightReference.NONE,
             disableDepthTestDistance: Number.POSITIVE_INFINITY,

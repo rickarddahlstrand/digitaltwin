@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { getBuilding, saveBuilding, getAllCategories, type BuildingRecord } from '../lib/pocketbase';
+import { getBuilding, saveBuilding, deleteBuilding, getAllCategories, type BuildingRecord } from '../lib/pocketbase';
 import type { BuildingInfo } from './useBuildingClick';
 
 export function useBuildingData(buildingInfo: BuildingInfo | null) {
@@ -48,5 +48,16 @@ export function useBuildingData(buildingInfo: BuildingInfo | null) {
     [buildingInfo]
   );
 
-  return { savedData, loading, saving, save, allCategories };
+  const remove = useCallback(async () => {
+    if (!osmId) return;
+    setSaving(true);
+    try {
+      await deleteBuilding(osmId);
+      setSavedData(null);
+    } finally {
+      setSaving(false);
+    }
+  }, [osmId]);
+
+  return { savedData, loading, saving, save, remove, allCategories };
 }

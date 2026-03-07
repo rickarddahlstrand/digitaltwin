@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { MapPin, Tag } from 'lucide-react';
+import { Building2, Layers, Zap } from 'lucide-react';
 import { slideInLeft, staggerContainer, staggerItem } from '../utils/animations';
 
 interface POIControls {
@@ -10,11 +10,17 @@ interface POIControls {
   toggleCategory: (cat: string) => void;
 }
 
-interface LayerPanelProps {
-  poiControls: POIControls;
+interface EnergyControls {
+  toggle: () => void;
+  active: boolean;
 }
 
-export default function LayerPanel({ poiControls }: LayerPanelProps) {
+interface LayerPanelProps {
+  poiControls: POIControls;
+  energyControls?: EnergyControls;
+}
+
+export default function LayerPanel({ poiControls, energyControls }: LayerPanelProps) {
   const categories = poiControls?.categories || [];
   const showingAll = poiControls?.isShowingAll() ?? true;
 
@@ -39,7 +45,7 @@ export default function LayerPanel({ poiControls }: LayerPanelProps) {
               onChange={() => poiControls?.showAllBuildings()}
               className="w-3.5 h-3.5 accent-blue-500 cursor-pointer"
             />
-            <MapPin size={11} className="text-blue-400" />
+            <Building2 size={11} className="text-blue-400" />
             <span className="font-medium">Alla byggnader</span>
           </label>
         </motion.div>
@@ -55,12 +61,30 @@ export default function LayerPanel({ poiControls }: LayerPanelProps) {
                 onChange={() => poiControls?.toggleCategory(cat)}
                 className="w-3.5 h-3.5 accent-blue-500 cursor-pointer"
               />
-              <Tag size={10} className="text-blue-400/60" />
+              <Layers size={10} className="text-blue-400/60" />
               {cat}
             </label>
           </motion.div>
         ))}
       </motion.div>
+
+      {energyControls && (
+        <>
+          <div className="border-t border-white/[0.08] mt-2 pt-2">
+            <label className="flex items-center gap-2 text-[11px] py-0.5 cursor-pointer select-none
+              text-white/60 hover:text-white transition-colors">
+              <input
+                type="checkbox"
+                checked={energyControls.active}
+                onChange={() => energyControls.toggle()}
+                className="w-3.5 h-3.5 accent-green-500 cursor-pointer"
+              />
+              <Zap size={11} className="text-green-400" />
+              <span className="font-medium">Delning av energi</span>
+            </label>
+          </div>
+        </>
+      )}
     </motion.div>
   );
 }

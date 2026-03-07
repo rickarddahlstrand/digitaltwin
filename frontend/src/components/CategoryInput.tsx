@@ -94,11 +94,11 @@ export default function CategoryInput({ value = [], onChange, allCategories = []
         {newCat.trim() && (
           <button
             onClick={() => add(newCat)}
-            className="px-3 py-1.5 rounded-lg text-xs font-medium
+            className="p-1.5 rounded-lg
               bg-blue-500/20 text-blue-300 border border-blue-400/20
               hover:bg-blue-500/30 transition-colors"
           >
-            Lägg till
+            <Plus size={14} />
           </button>
         )}
       </div>
