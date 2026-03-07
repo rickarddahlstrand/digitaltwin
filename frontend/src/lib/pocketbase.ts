@@ -32,10 +32,10 @@ export async function saveBuilding(record: Partial<BuildingRecord>): Promise<Bui
   return pb.collection('buildings').create<BuildingRecord>(record);
 }
 
-export async function getAllBuildings(): Promise<BuildingRecord[]> {
+export async function getAllBuildings(requestKey = 'getAllBuildings'): Promise<BuildingRecord[]> {
   try {
     const result = await pb.collection('buildings').getList<BuildingRecord>(1, 200, {
-      requestKey: 'getAllBuildings',
+      requestKey,
     });
     return result.items;
   } catch {
