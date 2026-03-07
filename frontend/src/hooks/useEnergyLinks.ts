@@ -2,7 +2,7 @@ import { useEffect, useRef, useCallback, useState } from 'react';
 import { useCesium } from '../context/CesiumContext';
 import type { Entity, Color, Cartesian3 } from 'cesium';
 
-interface EnergyLink {
+export interface EnergyLink {
   from: { name: string; lon: number; lat: number };
   to: { name: string; lon: number; lat: number };
   surplusKwh: number;      // Överskott solel per år (kWh)
@@ -50,7 +50,7 @@ const ENERGY_LINKS: EnergyLink[] = [
 // Largest surplus used to normalize arc widths
 const MAX_SURPLUS = Math.max(...ENERGY_LINKS.map((l) => l.surplusKwh));
 
-function arcPositions(link: EnergyLink, segments: number, peakAlt: number): number[] {
+export function arcPositions(link: EnergyLink, segments: number, peakAlt: number): number[] {
   const coords: number[] = [];
   for (let i = 0; i <= segments; i++) {
     const t = i / segments;
@@ -62,7 +62,7 @@ function arcPositions(link: EnergyLink, segments: number, peakAlt: number): numb
   return coords;
 }
 
-function formatKwh(kwh: number): string {
+export function formatKwh(kwh: number): string {
   if (kwh >= 1000) return `${(kwh / 1000).toFixed(1)} MWh`;
   return `${kwh} kWh`;
 }
