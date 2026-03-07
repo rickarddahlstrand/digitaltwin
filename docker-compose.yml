@@ -7,7 +7,7 @@ services:
       - pocketbase_data:/pb_data
     networks:
       net:
-        ipv4_address: 10.10.24.3
+        ipv4_address: 10.10.26.3
     depends_on:
       - tunnel
     healthcheck:
@@ -24,7 +24,7 @@ services:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN}
     networks:
       net:
-        ipv4_address: 10.10.24.2
+        ipv4_address: 10.10.26.2
 
 volumes:
   pocketbase_data:
@@ -33,4 +33,4 @@ networks:
   net:
     ipam:
       config:
-        - subnet: 10.10.24.0/24
+        - subnet: 10.10.26.0/24
