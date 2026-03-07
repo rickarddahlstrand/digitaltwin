@@ -1,7 +1,6 @@
 import PocketBase, { RecordModel } from 'pocketbase';
 
-const pb = new PocketBase();
-pb.baseURL = import.meta.env.VITE_PB_URL || window.location.origin;
+const pb = new PocketBase(import.meta.env.VITE_PB_URL || window.location.origin);
 
 export interface BuildingRecord extends RecordModel {
   osm_id: string;
@@ -17,6 +16,7 @@ export async function getBuilding(osmId: string): Promise<BuildingRecord | null>
   try {
     const result = await pb.collection('buildings').getList<BuildingRecord>(1, 1, {
       filter: `osm_id='${osmId}'`,
+      requestKey: `getBuilding-${osmId}`,
     });
     return result.items[0] ?? null;
   } catch {
@@ -34,7 +34,9 @@ export async function saveBuilding(record: Partial<BuildingRecord>): Promise<Bui
 
 export async function getAllBuildings(): Promise<BuildingRecord[]> {
   try {
-    const result = await pb.collection('buildings').getList<BuildingRecord>(1, 200);
+    const result = await pb.collection('buildings').getList<BuildingRecord>(1, 200, {
+      requestKey: 'getAllBuildings',
+    });
     return result.items;
   } catch {
     return [];

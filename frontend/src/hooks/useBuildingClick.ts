@@ -71,10 +71,7 @@ export function useBuildingClick() {
       }
 
       // Build info
-      const name =
-        feature.getProperty('name') ||
-        feature.getProperty('building') ||
-        'Byggnad';
+      const name = feature.getProperty('name') || 'Byggnad';
 
       const props: string[] = feature.getPropertyIds();
       const rows: Array<{ label: string; value: string }> = [];
@@ -89,8 +86,8 @@ export function useBuildingClick() {
         }
       });
 
-      const osmId = feature.getProperty('elementId');
-      const osmType = feature.getProperty('elementType');
+      const osmId = String(feature.getProperty('elementId'));
+      const osmType = String(feature.getProperty('elementType'));
       let osmLink: string | null = null;
       if (osmId && osmType) {
         osmLink = `https://www.openstreetmap.org/${osmType}/${osmId}`;
