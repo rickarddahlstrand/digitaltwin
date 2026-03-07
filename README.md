@@ -242,4 +242,4 @@ Runs on push to `main`:
 
 ## License
 
-This project is proprietary. All rights reserved.
+This project is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
