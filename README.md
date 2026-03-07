@@ -6,13 +6,13 @@ A 3D digital twin of the Hammarby Sjöstad district in Stockholm, built with Ces
 
 ```
 Browser                        Server (PocketBase)
-┌──────────────────────┐      ┌──────────────────────┐
-│  React 19 + TS       │      │  PocketBase v0.36     │
-│  CesiumJS (CDN)      │ ───► │  ├─ REST API (/api)   │
+┌──────────────────────┐      ┌────────────────────────┐
+│  React 19 + TS       │      │  PocketBase v0.36      │
+│  CesiumJS (CDN)      │ ───► │  ├─ REST API (/api)    │
 │  Tailwind CSS 4      │      │  ├─ pb_public (SPA)    │
 │  Framer Motion       │      │  ├─ pb_hooks (JS)      │
 │  PocketBase SDK      │      │  └─ SQLite (pb_data)   │
-└──────────────────────┘      └──────────────────────┘
+└──────────────────────┘      └────────────────────────┘
 ```
 
 In production, PocketBase serves the built frontend as static files (`pb_public`) and handles the API — there is no separate web server. A Cloudflare Tunnel provides HTTPS and public access.
