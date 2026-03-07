@@ -15,9 +15,9 @@ api_keys.cfg
 .env
 frontend/public/config.js
 
-# Frontend
-frontend/node_modules/
-frontend/dist/
+# Node
+node_modules/
+dist/
 *.tsbuildinfo
 
 # PocketBase

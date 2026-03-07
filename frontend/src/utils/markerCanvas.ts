@@ -1,4 +1,4 @@
-export function createMarkerCanvas(label) {
+export function createMarkerCanvas(label: string): HTMLCanvasElement | null {
   if (!label) return null;
 
   const dpr = 2;
@@ -6,7 +6,7 @@ export function createMarkerCanvas(label) {
   const px = 8 * dpr;
   const py = 4 * dpr;
 
-  const measure = document.createElement('canvas').getContext('2d');
+  const measure = document.createElement('canvas').getContext('2d')!;
   measure.font = `600 ${fontSize}px system-ui, sans-serif`;
   const tw = measure.measureText(label).width;
 
@@ -17,7 +17,7 @@ export function createMarkerCanvas(label) {
   const canvas = document.createElement('canvas');
   canvas.width = w;
   canvas.height = h;
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d')!;
 
   // Background pill
   ctx.fillStyle = 'rgba(0,0,0,0.55)';

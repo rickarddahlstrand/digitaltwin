@@ -22,7 +22,7 @@ export default function App() {
   );
 }
 
-function OverlayWrapper({ status }) {
+function OverlayWrapper({ status }: { status: string }) {
   const { isReady } = useCesium();
   const cameraDataRef = useCameraHud();
   const { buildingInfo, clearSelection } = useBuildingClick();

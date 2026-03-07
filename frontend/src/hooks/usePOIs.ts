@@ -1,15 +1,19 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import { useCesium } from '../context/CesiumContext';
 import { createMarkerCanvas } from '../utils/markerCanvas';
+import { getAllBuildings, type BuildingRecord } from '../lib/pocketbase';
+import type { Entity } from 'cesium';
 
-const Cesium = window.Cesium;
-const PB_URL = '/pb/api/collections/buildings/records';
+interface MarkerEntry {
+  entity: Entity;
+  categories: string[];
+}
 
 export function usePOIs() {
   const { viewerRef, isReady } = useCesium();
-  const entitiesRef = useRef([]);    // { entity, categories }
-  const activeCatsRef = useRef(new Set());  // empty = show all
-  const [categories, setCategories] = useState([]);
+  const entitiesRef = useRef<MarkerEntry[]>([]);
+  const activeCatsRef = useRef(new Set<string>());
+  const [categories, setCategories] = useState<string[]>([]);
   const [, forceUpdate] = useState(0);
 
   const loadMarkers = useCallback(async () => {
@@ -22,11 +26,9 @@ export function usePOIs() {
     entitiesRef.current = [];
 
     try {
-      const res = await fetch(`${PB_URL}?perPage=200`);
-      const data = await res.json();
-      const buildings = data.items || [];
+      const buildings: BuildingRecord[] = await getAllBuildings();
 
-      const catSet = new Set();
+      const catSet = new Set<string>();
 
       buildings.forEach((b) => {
         if (!b.latitude || !b.longitude) return;
@@ -50,7 +52,7 @@ export function usePOIs() {
           name: label,
           position,
           billboard: {
-            image: markerImage,
+            image: markerImage as unknown as string,
             verticalOrigin: Cesium.VerticalOrigin.CENTER,
             heightReference: Cesium.HeightReference.NONE,
             disableDepthTestDistance: Number.POSITIVE_INFINITY,
@@ -86,7 +88,7 @@ export function usePOIs() {
     forceUpdate((n) => n + 1);
   };
 
-  const toggleCategory = (cat) => {
+  const toggleCategory = (cat: string) => {
     if (activeCatsRef.current.has(cat)) {
       activeCatsRef.current.delete(cat);
     } else {
@@ -96,7 +98,7 @@ export function usePOIs() {
     forceUpdate((n) => n + 1);
   };
 
-  const isCategoryActive = (cat) => activeCatsRef.current.has(cat);
+  const isCategoryActive = (cat: string) => activeCatsRef.current.has(cat);
   const isShowingAll = () => activeCatsRef.current.size === 0;
 
   return {

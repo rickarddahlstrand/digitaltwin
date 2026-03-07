@@ -2,16 +2,19 @@ import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { scaleSpring } from '../utils/animations';
 import { useCesium } from '../context/CesiumContext';
+import type { CameraData } from '../hooks/useCameraHud';
 
-const Cesium = window.Cesium;
+interface CompassProps {
+  cameraDataRef: React.MutableRefObject<CameraData>;
+}
 
-export default function Compass({ cameraDataRef }) {
+export default function Compass({ cameraDataRef }: CompassProps) {
   const { viewerRef } = useCesium();
-  const ringRef = useRef(null);
-  const headingTextRef = useRef(null);
+  const ringRef = useRef<HTMLDivElement>(null);
+  const headingTextRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let raf;
+    let raf: number;
     function loop() {
       const d = cameraDataRef.current;
       if (ringRef.current) {

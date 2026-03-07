@@ -1,7 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { fadeIn } from '../utils/animations';
 
-export default function HudStatus({ status }) {
+interface HudStatusProps {
+  status: string;
+}
+
+export default function HudStatus({ status }: HudStatusProps) {
   return (
     <div className="absolute bottom-10 right-4 z-10 pointer-events-none text-right">
       <AnimatePresence mode="wait">

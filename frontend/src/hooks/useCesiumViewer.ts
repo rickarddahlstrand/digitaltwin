@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { useCesium } from '../context/CesiumContext';
 
-const Cesium = window.Cesium;
-
-export function useCesiumViewer(containerRef, setStatus) {
+export function useCesiumViewer(
+  containerRef: React.RefObject<HTMLDivElement | null>,
+  setStatus: (status: string) => void,
+) {
   const { viewerRef, googleTilesetRef, osmTilesetRef, setIsReady } = useCesium();
   const initedRef = useRef(false);
 
@@ -68,7 +69,7 @@ export function useCesiumViewer(containerRef, setStatus) {
       setIsReady(true);
     });
 
-    // Set camera to Hammarby Sjöstad overview
+    // Set camera to Hammarby Sjostad overview
     viewer.camera.setView({
       destination: Cesium.Cartesian3.fromDegrees(18.094, 59.2929, 991),
       orientation: {
@@ -87,5 +88,6 @@ export function useCesiumViewer(containerRef, setStatus) {
       googleTilesetRef.current = null;
       osmTilesetRef.current = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }

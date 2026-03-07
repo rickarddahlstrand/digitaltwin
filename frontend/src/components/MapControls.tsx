@@ -3,21 +3,24 @@ import { motion } from 'framer-motion';
 import { Plus, Minus, Home, RotateCcw, RotateCw, ChevronUp, ChevronDown } from 'lucide-react';
 import { slideInLeft } from '../utils/animations';
 import { useCesium } from '../context/CesiumContext';
-
-const Cesium = window.Cesium;
+import type { CameraData } from '../hooks/useCameraHud';
 
 const btnClass =
   'w-7 h-7 flex items-center justify-center rounded-md text-white/50 hover:text-white hover:bg-white/10 transition-colors';
 
-export default function MapControls({ cameraDataRef }) {
+interface MapControlsProps {
+  cameraDataRef: React.MutableRefObject<CameraData>;
+}
+
+export default function MapControls({ cameraDataRef }: MapControlsProps) {
   const { viewerRef } = useCesium();
-  const ringRef = useRef(null);
-  const coordsRef = useRef(null);
+  const ringRef = useRef<HTMLDivElement>(null);
+  const coordsRef = useRef<HTMLDivElement>(null);
   const draggingRef = useRef(false);
   const dragStartRef = useRef({ x: 0, heading: 0 });
 
   useEffect(() => {
-    let raf;
+    let raf: number;
     function loop() {
       const d = cameraDataRef.current;
       if (ringRef.current) {
@@ -35,7 +38,7 @@ export default function MapControls({ cameraDataRef }) {
 
   const didDragRef = useRef(false);
 
-  const onCompassDown = useCallback((e) => {
+  const onCompassDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     const viewer = viewerRef.current;
     if (!viewer) return;
@@ -46,7 +49,7 @@ export default function MapControls({ cameraDataRef }) {
       heading: Cesium.Math.toDegrees(viewer.camera.heading),
     };
 
-    const onMove = (ev) => {
+    const onMove = (ev: MouseEvent) => {
       if (!draggingRef.current) return;
       const dx = ev.clientX - dragStartRef.current.x;
       if (Math.abs(dx) > 3) didDragRef.current = true;

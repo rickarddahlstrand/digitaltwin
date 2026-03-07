@@ -2,7 +2,19 @@ import { motion } from 'framer-motion';
 import { MapPin, Tag } from 'lucide-react';
 import { slideInLeft, staggerContainer, staggerItem } from '../utils/animations';
 
-export default function LayerPanel({ poiControls }) {
+interface POIControls {
+  categories: string[];
+  isShowingAll: () => boolean;
+  showAllBuildings: () => void;
+  isCategoryActive: (cat: string) => boolean;
+  toggleCategory: (cat: string) => void;
+}
+
+interface LayerPanelProps {
+  poiControls: POIControls;
+}
+
+export default function LayerPanel({ poiControls }: LayerPanelProps) {
   const categories = poiControls?.categories || [];
   const showingAll = poiControls?.isShowingAll() ?? true;
 

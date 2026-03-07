@@ -1,13 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
 import { useCesium } from '../context/CesiumContext';
 import { LABEL_MAP, SKIP_KEYS, formatValue } from '../data/labelMap';
+import type { Entity } from 'cesium';
 
-const Cesium = window.Cesium;
+export interface BuildingInfo {
+  name: string;
+  rows: Array<{ label: string; value: string }>;
+  osmLink: string | null;
+  osmId: string;
+  osmType: string;
+  latitude: number;
+  longitude: number;
+}
 
 export function useBuildingClick() {
   const { viewerRef, osmTilesetRef, isReady } = useCesium();
-  const [buildingInfo, setBuildingInfo] = useState(null);
-  const markerRef = useRef(null);
+  const [buildingInfo, setBuildingInfo] = useState<BuildingInfo | null>(null);
+  const markerRef = useRef<Entity | null>(null);
 
   useEffect(() => {
     const viewer = viewerRef.current;
@@ -29,13 +38,15 @@ export function useBuildingClick() {
 
     const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
 
-    handler.setInputAction((movement) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    handler.setInputAction((movement: any) => {
       const pickedObjects = viewer.scene.drillPick(movement.position);
 
       // Duck-type check — instanceof fails with minified CDN build
-      let feature = null;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let feature: any = null;
       for (let i = 0; i < pickedObjects.length; i++) {
-        const p = pickedObjects[i];
+        const p = pickedObjects[i] as { tileset?: unknown; getPropertyIds?: () => string[] };
         if (
           p.tileset === osmTilesetRef.current &&
           typeof p.getPropertyIds === 'function'
@@ -54,7 +65,8 @@ export function useBuildingClick() {
       // Place marker
       const clickPosition = viewer.scene.pickPosition(movement.position);
       if (clickPosition) {
-        marker.position = clickPosition;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (marker as any).position = clickPosition;
         marker.show = true;
       }
 
@@ -64,9 +76,9 @@ export function useBuildingClick() {
         feature.getProperty('building') ||
         'Byggnad';
 
-      const props = feature.getPropertyIds();
-      const rows = [];
-      props.forEach((key) => {
+      const props: string[] = feature.getPropertyIds();
+      const rows: Array<{ label: string; value: string }> = [];
+      props.forEach((key: string) => {
         if (SKIP_KEYS[key]) return;
         const val = feature.getProperty(key);
         if (val !== undefined && val !== null && val !== '') {
@@ -79,7 +91,7 @@ export function useBuildingClick() {
 
       const osmId = feature.getProperty('elementId');
       const osmType = feature.getProperty('elementType');
-      let osmLink = null;
+      let osmLink: string | null = null;
       if (osmId && osmType) {
         osmLink = `https://www.openstreetmap.org/${osmType}/${osmId}`;
       }
@@ -96,6 +108,7 @@ export function useBuildingClick() {
         viewer.entities.remove(marker);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isReady]);
 
   const clearSelection = () => {

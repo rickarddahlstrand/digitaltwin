@@ -1,11 +1,12 @@
 import { useEffect, useState, useCallback } from 'react';
-import { getBuilding, saveBuilding, getAllCategories } from '../api/pocketbase';
+import { getBuilding, saveBuilding, getAllCategories, type BuildingRecord } from '../lib/pocketbase';
+import type { BuildingInfo } from './useBuildingClick';
 
-export function useBuildingData(buildingInfo) {
-  const [savedData, setSavedData] = useState(null);
+export function useBuildingData(buildingInfo: BuildingInfo | null) {
+  const [savedData, setSavedData] = useState<BuildingRecord | null>(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [allCategories, setAllCategories] = useState([]);
+  const [allCategories, setAllCategories] = useState<string[]>([]);
 
   const osmId = buildingInfo?.osmId;
 
@@ -24,7 +25,7 @@ export function useBuildingData(buildingInfo) {
   }, [osmId]);
 
   const save = useCallback(
-    async ({ customName, notes, categories }) => {
+    async ({ customName, notes, categories }: { customName: string; notes: string; categories: string[] }) => {
       if (!buildingInfo?.osmId) return;
       setSaving(true);
       try {

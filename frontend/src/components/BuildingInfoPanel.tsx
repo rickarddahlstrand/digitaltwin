@@ -4,12 +4,19 @@ import { X, ExternalLink, Save, Loader2, Check } from 'lucide-react';
 import { dropExit } from '../utils/animations';
 import { useBuildingData } from '../hooks/useBuildingData';
 import CategoryInput from './CategoryInput';
+import type { BuildingInfo } from '../hooks/useBuildingClick';
 
-export default function BuildingInfoPanel({ info, onClose, onSaved }) {
+interface BuildingInfoPanelProps {
+  info: BuildingInfo | null;
+  onClose: () => void;
+  onSaved?: () => void;
+}
+
+export default function BuildingInfoPanel({ info, onClose, onSaved }: BuildingInfoPanelProps) {
   const { savedData, loading, saving, save, allCategories } = useBuildingData(info);
   const [customName, setCustomName] = useState('');
   const [notes, setNotes] = useState('');
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [justSaved, setJustSaved] = useState(false);
 
   useEffect(() => {

@@ -1,12 +1,17 @@
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../utils/animations';
+import type { CameraData } from '../hooks/useCameraHud';
 
-export default function HudCoords({ cameraDataRef }) {
-  const elRef = useRef(null);
+interface HudCoordsProps {
+  cameraDataRef: React.MutableRefObject<CameraData>;
+}
+
+export default function HudCoords({ cameraDataRef }: HudCoordsProps) {
+  const elRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let raf;
+    let raf: number;
     function loop() {
       const d = cameraDataRef.current;
       if (elRef.current) {

@@ -1,12 +1,18 @@
 import { useState } from 'react';
 import { X, Plus } from 'lucide-react';
 
-export default function CategoryInput({ value = [], onChange, allCategories = [] }) {
+interface CategoryInputProps {
+  value?: string[];
+  onChange: (value: string[]) => void;
+  allCategories?: string[];
+}
+
+export default function CategoryInput({ value = [], onChange, allCategories = [] }: CategoryInputProps) {
   const [newCat, setNewCat] = useState('');
 
   const available = allCategories.filter((c) => !value.includes(c));
 
-  const add = (cat) => {
+  const add = (cat: string) => {
     const trimmed = cat.trim();
     if (trimmed && !value.includes(trimmed)) {
       onChange([...value, trimmed]);
@@ -14,11 +20,11 @@ export default function CategoryInput({ value = [], onChange, allCategories = []
     setNewCat('');
   };
 
-  const remove = (cat) => {
+  const remove = (cat: string) => {
     onChange(value.filter((c) => c !== cat));
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && newCat.trim()) {
       e.preventDefault();
       add(newCat);
