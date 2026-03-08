@@ -82,14 +82,34 @@ cd digitaltwin
 cd frontend && npm ci
 ```
 
+### Initialize the Database
+
+The init script creates the database schema, a superuser account, and loads seed data (96 buildings in Hammarby Sjöstad with names and categories).
+
+```bash
+# Interactive — prompts for email and password
+./scripts/init-db.sh
+
+# Non-interactive
+./scripts/init-db.sh admin@example.com MyPassword10
+```
+
+The script will:
+1. Run database migrations (creates `buildings` and `settings` collections)
+2. Create a superuser account
+3. Load seed data from `scripts/seed-data.sql`
+
 ### Configure Cesium Ion Token
 
-The Cesium Ion access token is stored in the PocketBase `settings` collection — no config files needed.
+A **Cesium Ion access token** is required for the 3D map to load. Get one free at [cesium.com/ion](https://cesium.com/ion/).
 
-1. Start PocketBase (see below)
-2. Open the admin dashboard at `http://localhost:8090/_/`
-3. Go to the **settings** collection
-4. Create a record with `key`: `cesium_token` and `value`: your Cesium Ion token
+After starting PocketBase:
+
+1. Open the admin panel at `http://localhost:8090/_/`
+2. Go to the **settings** collection
+3. Create a new record: `key` = `cesium_token`, `value` = your token
+
+The token is stored in the database — no config files or environment variables needed.
 
 ### Development (Vite dev server)
 
@@ -138,7 +158,13 @@ curl -fsSL "https://github.com/pocketbase/pocketbase/releases/download/v${PB_VER
 
 ## Available Scripts
 
-All commands run from the `frontend/` directory:
+**Project root:**
+
+| Command | Description |
+|---------|-------------|
+| `./scripts/init-db.sh` | Initialize database, superuser, and seed data |
+
+**Frontend (`cd frontend`):**
 
 | Command | Description |
 |---------|-------------|
