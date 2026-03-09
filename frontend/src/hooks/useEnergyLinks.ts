@@ -74,12 +74,26 @@ export function useEnergyLinks() {
   const startTimeRef = useRef(Date.now());
   const initedRef = useRef(false);
 
+  const setContinuousRendering = useCallback((on: boolean) => {
+    const viewer = viewerRef.current;
+    if (!viewer || viewer.isDestroyed()) return;
+    if (on) {
+      viewer.scene.requestRenderMode = false;
+      viewer.targetFrameRate = 30;
+    } else {
+      viewer.scene.requestRenderMode = true;
+      viewer.targetFrameRate = undefined as unknown as number;
+    }
+  }, [viewerRef]);
+
   const remove = useCallback(() => {
     const viewer = viewerRef.current;
     if (!viewer || viewer.isDestroyed()) return;
     entitiesRef.current.forEach((e) => viewer.entities.remove(e));
     entitiesRef.current = [];
-  }, [viewerRef]);
+    viewer.scene.requestRender();
+    setContinuousRendering(false);
+  }, [viewerRef, setContinuousRendering]);
 
   const createLink = useCallback((link: EnergyLink, baseColor: Color): Entity[] => {
     const viewer = viewerRef.current!;
@@ -192,7 +206,8 @@ export function useEnergyLinks() {
     ENERGY_LINKS.forEach((link, i) => {
       entitiesRef.current.push(...createLink(link, colors[i % colors.length]!));
     });
-  }, [viewerRef, remove, createLink]);
+    setContinuousRendering(true);
+  }, [viewerRef, remove, createLink, setContinuousRendering]);
 
   const toggle = useCallback(() => {
     setActive((prev) => {

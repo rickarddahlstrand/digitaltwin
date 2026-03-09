@@ -42,7 +42,6 @@ describe('createMarkerCanvas', () => {
   });
 
   it('returns a data URL string for valid label', async () => {
-    // Re-import to pick up mocked canvas
     vi.resetModules();
     const { createMarkerCanvas } = await import('../markerCanvas');
     const result = createMarkerCanvas('BRF Sundet');
@@ -55,9 +54,6 @@ describe('createMarkerCanvas', () => {
     vi.resetModules();
     const { createMarkerCanvas } = await import('../markerCanvas');
     const result = createMarkerCanvas('Test Label');
-    // The black labels bug was caused by returning a canvas element
-    // that got GC'd before CesiumJS read the pixels. Returning a
-    // data URL string avoids this.
     expect(result).toBeTypeOf('string');
     expect(result).not.toBeInstanceOf(HTMLCanvasElement);
   });
@@ -78,5 +74,81 @@ describe('createMarkerCanvas', () => {
       expect.any(Number),
       expect.any(Number),
     );
+  });
+});
+
+describe('markerCanvas cache', () => {
+  it('returns cached result for same label', async () => {
+    vi.resetModules();
+    const { createMarkerCanvas, clearMarkerCache } = await import('../markerCanvas');
+    clearMarkerCache();
+
+    const first = createMarkerCanvas('Cached Label');
+    mockToDataURL.mockClear();
+
+    const second = createMarkerCanvas('Cached Label');
+    expect(second).toBe(first);
+    // Should NOT call toDataURL again — served from cache
+    expect(mockToDataURL).not.toHaveBeenCalled();
+  });
+
+  it('returns cached result for same label + bgColor', async () => {
+    vi.resetModules();
+    const { createMarkerCanvas, clearMarkerCache } = await import('../markerCanvas');
+    clearMarkerCache();
+
+    const first = createMarkerCanvas('Test', 'red');
+    mockToDataURL.mockClear();
+
+    const second = createMarkerCanvas('Test', 'red');
+    expect(second).toBe(first);
+    expect(mockToDataURL).not.toHaveBeenCalled();
+  });
+
+  it('produces different results for different bgColor', async () => {
+    vi.resetModules();
+    mockToDataURL
+      .mockReturnValueOnce('data:image/png;base64,color1')
+      .mockReturnValueOnce('data:image/png;base64,color2');
+    const { createMarkerCanvas, clearMarkerCache } = await import('../markerCanvas');
+    clearMarkerCache();
+
+    const a = createMarkerCanvas('Test', 'red');
+    const b = createMarkerCanvas('Test', 'green');
+    expect(a).not.toBe(b);
+  });
+
+  it('clearMarkerCache invalidates the cache', async () => {
+    vi.resetModules();
+    const { createMarkerCanvas, clearMarkerCache } = await import('../markerCanvas');
+    clearMarkerCache();
+
+    mockToDataURL.mockReturnValueOnce('data:image/png;base64,first');
+    const first = createMarkerCanvas('Clear Test');
+    expect(first).toBe('data:image/png;base64,first');
+
+    // Second call should be cached
+    const cached = createMarkerCanvas('Clear Test');
+    expect(cached).toBe(first);
+
+    // After clearing, a new call should generate a fresh image
+    clearMarkerCache();
+    mockToDataURL.mockReturnValueOnce('data:image/png;base64,second');
+    const second = createMarkerCanvas('Clear Test');
+    expect(second).toBe('data:image/png;base64,second');
+    expect(second).not.toBe(first);
+  });
+
+  it('caches multi-line labels correctly', async () => {
+    vi.resetModules();
+    const { createMarkerCanvas, clearMarkerCache } = await import('../markerCanvas');
+    clearMarkerCache();
+
+    const first = createMarkerCanvas(['Line 1', 'Line 2']);
+    mockToDataURL.mockClear();
+
+    const second = createMarkerCanvas(['Line 1', 'Line 2']);
+    expect(second).toBe(first);
+    expect(mockToDataURL).not.toHaveBeenCalled();
   });
 });

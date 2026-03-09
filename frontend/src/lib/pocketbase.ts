@@ -6,10 +6,12 @@ export interface BuildingRecord extends RecordModel {
   osm_id: string;
   osm_type: string;
   custom_name: string;
+  property_name: string;
   notes: string;
   categories: string[];
   latitude: number;
   longitude: number;
+  metadata: { address?: string } | null;
 }
 
 export async function getBuilding(osmId: string): Promise<BuildingRecord | null> {
@@ -34,7 +36,7 @@ export async function saveBuilding(record: Partial<BuildingRecord>): Promise<Bui
 
 export async function getAllBuildings(requestKey = 'getAllBuildings'): Promise<BuildingRecord[]> {
   try {
-    const result = await pb.collection('buildings').getList<BuildingRecord>(1, 200, {
+    const result = await pb.collection('buildings').getList<BuildingRecord>(1, 500, {
       requestKey,
     });
     return result.items;

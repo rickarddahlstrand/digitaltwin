@@ -26,12 +26,14 @@ export function useCesiumViewer(
       fullscreenButton: false,
       selectionIndicator: false,
       infoBox: false,
+      requestRenderMode: true,
+      maximumRenderTimeChange: Infinity,
+      msaaSamples: 2,
     });
 
     viewerRef.current = viewer;
 
     // Disable HDR to prevent dark rendering
-    viewer.scene.pickTranslucentDepth = true;
     viewer.scene.highDynamicRange = false;
 
     // Fixed midday sun
@@ -43,6 +45,7 @@ export function useCesiumViewer(
     })
       .then((tileset) => {
         googleTilesetRef.current = tileset;
+        tileset.maximumScreenSpaceError = 24;
         viewer.scene.primitives.add(tileset);
         setStatus('Google 3D Tiles laddade');
       })

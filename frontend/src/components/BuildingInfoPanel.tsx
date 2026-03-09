@@ -1,19 +1,30 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ExternalLink, Save, Loader2, Check, Trash2 } from 'lucide-react';
+import { X, ExternalLink, Save, Loader2, Check, FileSpreadsheet } from 'lucide-react';
 import { dropExit } from '../utils/animations';
 import { useBuildingData } from '../hooks/useBuildingData';
 import CategoryInput from './CategoryInput';
 import type { BuildingInfo } from '../hooks/useBuildingClick';
+import type { BrfRow } from '../utils/csvParser';
 
 interface BuildingInfoPanelProps {
   info: BuildingInfo | null;
   onClose: () => void;
   onSaved?: () => void;
+  getBrfForBuilding?: (customName: string, address?: string) => BrfRow | null;
+  brfFields?: { key: string; label: string }[];
 }
 
-export default function BuildingInfoPanel({ info, onClose, onSaved }: BuildingInfoPanelProps) {
-  const { savedData, loading, saving, save, remove, allCategories } = useBuildingData(info);
+export default function BuildingInfoPanel({ info, onClose, onSaved, getBrfForBuilding, brfFields }: BuildingInfoPanelProps) {
+  const { savedData, loading, saving, save, allCategories } = useBuildingData(info);
+
+  // Look up BRF row using savedData (correct custom_name) when available
+  const brfRow = getBrfForBuilding
+    ? getBrfForBuilding(
+        savedData?.custom_name || info?.name || '',
+        savedData?.metadata?.address || info?.address,
+      )
+    : null;
   const [customName, setCustomName] = useState('');
   const [notes, setNotes] = useState('');
   const [categories, setCategories] = useState<string[]>([]);
@@ -58,7 +69,7 @@ export default function BuildingInfoPanel({ info, onClose, onSaved }: BuildingIn
           <div className="flex items-center justify-between px-4 py-3
             border-b border-white/[0.08] bg-white/[0.04]">
             <span className="text-[15px] font-bold text-white">
-              {savedData?.custom_name || info.name}
+              {savedData?.custom_name || savedData?.property_name || info.name}
             </span>
             <button
               onClick={onClose}
@@ -67,6 +78,24 @@ export default function BuildingInfoPanel({ info, onClose, onSaved }: BuildingIn
               <X size={16} className="text-white/50 hover:text-white" />
             </button>
           </div>
+
+          {/* Fastighet & Adress */}
+          {(savedData?.property_name || savedData?.metadata?.address) && (
+            <div className="px-4 py-2 space-y-0.5 border-b border-white/[0.08] bg-white/[0.02]">
+              {savedData?.property_name && (
+                <p className="text-xs text-white/60">
+                  <span className="text-white/40">Fastighet: </span>
+                  {savedData.property_name}
+                </p>
+              )}
+              {savedData?.metadata?.address && (
+                <p className="text-xs text-white/60">
+                  <span className="text-white/40">Adress: </span>
+                  {savedData.metadata.address}
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Body */}
           <div className="p-4 pt-3 space-y-2.5">
@@ -128,25 +157,33 @@ export default function BuildingInfoPanel({ info, onClose, onSaved }: BuildingIn
                 {saving ? 'Sparar...' : justSaved ? 'Sparat' : 'Spara'}
               </button>
 
-              {savedData && (
-                <button
-                  onClick={async () => {
-                    await remove();
-                    onSaved?.();
-                    onClose();
-                  }}
-                  disabled={saving || loading}
-                  className="flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg
-                    text-xs font-semibold transition-all
-                    bg-red-500/15 hover:bg-red-500/25 text-red-400
-                    border border-red-400/20
-                    disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  <Trash2 size={12} />
-                  Radera
-                </button>
-              )}
             </div>
+
+            {/* BRF data rows */}
+            {brfRow && brfFields && brfFields.length > 0 && (
+              <div className="pt-1.5 space-y-1">
+                <div className="flex items-center gap-1.5">
+                  <FileSpreadsheet size={11} className="text-emerald-400" />
+                  <span className="text-xs font-medium text-emerald-400/70">Fastighetsdata</span>
+                </div>
+                {brfFields.map((f) => {
+                  const val = brfRow[f.key];
+                  if (val === undefined || val === '') return null;
+                  return (
+                    <div
+                      key={f.key}
+                      className="flex justify-between items-baseline px-3 py-2
+                        rounded-lg bg-emerald-500/[0.06] border border-emerald-400/[0.08]"
+                    >
+                      <span className="text-xs text-emerald-300/50">{f.label}</span>
+                      <span className="font-medium text-white/90 text-right max-w-[60%] break-words">
+                        {String(val)}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
 
             {/* Property rows */}
             <div className="pt-1.5 space-y-1">

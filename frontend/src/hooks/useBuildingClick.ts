@@ -5,6 +5,7 @@ import type { Entity } from 'cesium';
 
 export interface BuildingInfo {
   name: string;
+  address: string;
   rows: Array<{ label: string; value: string }>;
   osmLink: string | null;
   osmId: string;
@@ -42,7 +43,36 @@ export function useBuildingClick() {
     handler.setInputAction((movement: any) => {
       const pickedObjects = viewer.scene.drillPick(movement.position);
 
-      // Duck-type check — instanceof fails with minified CDN build
+      // 1. Check for billboard entity click (building markers from usePOIs)
+      for (let i = 0; i < pickedObjects.length; i++) {
+        const p = pickedObjects[i];
+        const entity = p?.id;
+        if (entity && entity.billboard && entity.properties?.isBuildingMarker) {
+          const props = entity.properties;
+          const osmId = String(props.osmId?.getValue?.() ?? props.osmId ?? '');
+          const osmType = String(props.osmType?.getValue?.() ?? props.osmType ?? 'way');
+          const lat = Number(props.latitude?.getValue?.() ?? props.latitude ?? 0);
+          const lon = Number(props.longitude?.getValue?.() ?? props.longitude ?? 0);
+          const addr = String(props.address?.getValue?.() ?? props.address ?? '');
+          const name = entity.name || 'Byggnad';
+
+          marker.show = false; // no blue dot needed for marker click
+
+          setBuildingInfo({
+            name,
+            address: addr,
+            rows: [],
+            osmLink: osmId ? `https://www.openstreetmap.org/${osmType}/${osmId}` : null,
+            osmId,
+            osmType,
+            latitude: lat,
+            longitude: lon,
+          });
+          return;
+        }
+      }
+
+      // 2. Check for OSM 3D tile feature click
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let feature: any = null;
       for (let i = 0; i < pickedObjects.length; i++) {
@@ -96,7 +126,12 @@ export function useBuildingClick() {
       const latitude = feature.getProperty('cesium#latitude');
       const longitude = feature.getProperty('cesium#longitude');
 
-      setBuildingInfo({ name, rows, osmLink, osmId, osmType, latitude, longitude });
+      // Build address string from OSM addr:* properties
+      const street = feature.getProperty('addr:street') || '';
+      const houseNumber = feature.getProperty('addr:housenumber') || '';
+      const address = street && houseNumber ? `${street} ${houseNumber}` : street || '';
+
+      setBuildingInfo({ name, address, rows, osmLink, osmId, osmType, latitude, longitude });
     }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
     return () => {
