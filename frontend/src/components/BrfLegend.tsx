@@ -14,6 +14,8 @@ interface BrfLegendProps {
 export default function BrfLegend({ brfState, onClose, onSetRange, onSetReversed }: BrfLegendProps) {
   const { matches, colorField, fields, colorReversed } = brfState;
   const [editing, setEditing] = useState(false);
+  const [editMin, setEditMin] = useState('0');
+  const [editMax, setEditMax] = useState('0');
 
   const fieldMeta = fields.find((f) => f.key === colorField);
   const label = fieldMeta?.label || colorField;
@@ -32,9 +34,6 @@ export default function BrfLegend({ brfState, onClose, onSetRange, onSetReversed
   const activeMax = brfState.colorMax ?? dataMax;
 
   const gradientDir = colorReversed ? 'to left' : 'to right';
-
-  const [editMin, setEditMin] = useState(String(Math.round(activeMin)));
-  const [editMax, setEditMax] = useState(String(Math.round(activeMax)));
 
   const handleOpen = () => {
     setEditMin(String(Math.round(activeMin)));
