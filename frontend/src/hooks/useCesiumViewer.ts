@@ -68,18 +68,17 @@ export function useCesiumViewer(
       });
 
     Promise.all([googleReady, osmReady]).then(() => {
+      // Set camera AFTER tilesets load to prevent them from overriding the view
+      viewer.camera.setView({
+        destination: Cesium.Cartesian3.fromDegrees(18.1010, 59.2916, 1126),
+        orientation: {
+          heading: Cesium.Math.toRadians(350),
+          pitch: Cesium.Math.toRadians(-35),
+          roll: 0,
+        },
+      });
       setStatus('Kartan är redo');
       setIsReady(true);
-    });
-
-    // Set camera to Hammarby Sjostad overview
-    viewer.camera.setView({
-      destination: Cesium.Cartesian3.fromDegrees(18.1010, 59.2916, 1126),
-      orientation: {
-        heading: Cesium.Math.toRadians(350),
-        pitch: Cesium.Math.toRadians(-35),
-        roll: 0,
-      },
     });
 
     return () => {
